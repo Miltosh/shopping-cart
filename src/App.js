@@ -1,5 +1,6 @@
 //feature 1
 import React, { useState } from "react";
+import Filter from "./components/Filter";
 import Products from "./components/Products";
 import data from "./data.json";
 
@@ -18,6 +19,15 @@ function App() {
       <main>
         <div className="content">
           <div className="main">
+            <Filter
+              data={data}
+              size={size}
+              setSize={setSize}
+              products={products}
+              setProducts={setProducts}
+              sort={sort}
+              setSort={setSort}
+            />
             <Products products={products} />
           </div>
           <div className="sidebar">Cart Items</div>
