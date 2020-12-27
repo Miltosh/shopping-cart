@@ -1,6 +1,24 @@
 import React from 'react'
 
-function Products({ products }) {
+function Products({ products, cartItems, setCartItems }) {
+
+    const addToCart = (product) => {
+        const itemsCart = cartItems.slice();
+        let alreadyInCart = false;
+
+        itemsCart.forEach(item => {
+            if (item._id === product._id) {
+
+                item.count++;
+                alreadyInCart = true;
+            }
+        });
+        if (!alreadyInCart) {
+            itemsCart.push({ ...product, count: 1 });
+        }
+        setCartItems(itemsCart)
+    }
+
     return (
         <div>
             <ul className="products">
@@ -13,7 +31,7 @@ function Products({ products }) {
                             </a>
                             <div className="product-price">
                                 <div>${product.price}</div>
-                                <button className='button primary'>Add To Cart</button>
+                                <button onClick={() => addToCart(product)} className='button primary'>Add To Cart</button>
                             </div>
                         </div>
                     </li>

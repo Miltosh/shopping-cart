@@ -1,5 +1,6 @@
 //feature 1
 import React, { useState } from "react";
+import Cart from "./components/Cart";
 import Filter from "./components/Filter";
 import Products from "./components/Products";
 import data from "./data.json";
@@ -9,6 +10,7 @@ function App() {
   const [products, setProducts] = useState(data.products); // контент всех ячеек выносим в state
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
+  const [cartItems, setCartItems] = useState([]);
 
 
   return (
@@ -28,9 +30,18 @@ function App() {
               sort={sort}
               setSort={setSort}
             />
-            <Products products={products} />
+            <Products
+              products={products}
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+            />
           </div>
-          <div className="sidebar">Cart Items</div>
+          <div className="sidebar">
+            <Cart
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+            />
+          </div>
         </div>
       </main>
       <footer>
