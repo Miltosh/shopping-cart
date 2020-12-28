@@ -15,8 +15,10 @@ function Products({ products, cartItems, setCartItems }) {
         });
         if (!alreadyInCart) {
             itemsCart.push({ ...product, count: 1 });
+            alreadyInCart = true;
         }
         setCartItems(itemsCart)
+        localStorage.setItem("CartItems", JSON.stringify(itemsCart))
     }
 
     return (

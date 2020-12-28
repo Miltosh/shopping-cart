@@ -7,11 +7,23 @@ import data from "./data.json";
 
 function App() {
 
+  const useLocalStorageList = (key, defaultValue) => {
+    const stored = localStorage.getItem(key);
+    const initial = stored ? JSON.parse(stored) : defaultValue;
+    const [value, setValue] = useState(initial);
+
+    return [value, setValue];
+  };
+
   const [products, setProducts] = useState(data.products); // контент всех ячеек выносим в state
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useLocalStorageList('CartItems', [])
+  const [showCheckout, setShowCheckout] = useState(false);
 
+  // const createOrder = (order) => {
+  //   alert("Need to save order form" + order.name)
+  // }
 
   return (
     <div className="grid-container">
@@ -40,6 +52,9 @@ function App() {
             <Cart
               cartItems={cartItems}
               setCartItems={setCartItems}
+              showCheckout={showCheckout}
+              setShowCheckout={setShowCheckout}
+            //createOrder={createOrder}
             />
           </div>
         </div>
