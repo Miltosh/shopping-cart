@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+//import Fade from 'react-reveal/Fade';
+import { Slide } from "react-awesome-reveal"
 
 function Cart({ cartItems, setCartItems, showCheckout, setShowCheckout }) {
 
@@ -33,23 +35,27 @@ function Cart({ cartItems, setCartItems, showCheckout, setShowCheckout }) {
             }
             <div>
                 <div className="cart">
-                    <ul className="cart-items">
-                        {cartItems.map((item) => (
-                            <li key={item._id}>
-                                <div>
-                                    <img src={item.image} alt={item.title} />
-                                </div>
-                                <div>
-                                    <div>{item.title}</div>
-                                    <div className="right">
-                                        {`$${item.price} x ${item.count} `}
-                                        <button className="button" onClick={() => removeFromCart(item)}>Remove</button>
-                                    </div>
+                    <Slide cascade triggerOnce direction='left' duration='500'>
+                        <ul className="cart-items">
+                            {cartItems.map((item) => (
 
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                                <li key={item._id}>
+                                    <div>
+                                        <img src={item.image} alt={item.title} />
+                                    </div>
+                                    <div>
+                                        <div>{item.title}</div>
+                                        <div className="right">
+                                            {`$${item.price} x ${item.count} `}
+                                            <button className="button" onClick={() => removeFromCart(item)}>Remove</button>
+                                        </div>
+
+                                    </div>
+                                </li>
+
+                            ))}
+                        </ul>
+                    </Slide>
                 </div>
                 {cartItems.length > 0
                     ? <div className="cart">
@@ -65,30 +71,32 @@ function Cart({ cartItems, setCartItems, showCheckout, setShowCheckout }) {
                     : null
                 }
                 {showCheckout && (
-                    <div className="cart">
-                        <form onSubmit={(e) => createOrder(e)}>
-                            <ul className="form-container">
-                                <li>
-                                    <label>Email</label>
-                                    <input name='Email' type="email" required onChange={(e) => handleInput(e)} />
-                                    { }
-                                </li>
-                                <li>
-                                    <label>Name</label>
-                                    <input name='Name' type="text" required onChange={(e) => handleInput(e)} />
-                                </li>
-                                <li>
-                                    <label>Addres</label>
-                                    <input name='Address' type="text" required onChange={(e) => handleInput(e)} />
-                                </li>
-                                <li>
-                                    <button className="button primary" type="submit">
-                                        Checkout
+                    <Slide direction='right' cascade={false} triggerOnce duration='700'>
+                        <div className="cart">
+                            <form onSubmit={(e) => createOrder(e)}>
+                                <ul className="form-container">
+                                    <li>
+                                        <label>Email</label>
+                                        <input name='Email' type="email" required onChange={(e) => handleInput(e)} />
+                                        { }
+                                    </li>
+                                    <li>
+                                        <label>Name</label>
+                                        <input name='Name' type="text" required onChange={(e) => handleInput(e)} />
+                                    </li>
+                                    <li>
+                                        <label>Addres</label>
+                                        <input name='Address' type="text" required onChange={(e) => handleInput(e)} />
+                                    </li>
+                                    <li>
+                                        <button className="button primary" type="submit">
+                                            Checkout
                                     </button>
-                                </li>
-                            </ul>
-                        </form>
-                    </div>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </Slide>
                 )}
             </div >
         </div >
