@@ -108,8 +108,8 @@ function Products({ store, products, cartItems, setCartItems }) {
     )
 }
 
-// export default Products
+export default Products
 
-export default connect((state) => ({ products: state.products.items }), {
-    fetchProducts,
-})(Products);
+// export default connect((state) => ({ products: state.products.items }), {
+//     fetchProducts,
+// })(Products);
