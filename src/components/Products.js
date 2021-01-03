@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
-//import { Zoom } from 'react-reveal';
+import React, { useState, useEffect } from 'react';
 import { Slide, Zoom } from "react-awesome-reveal"
 import Modal from 'react-modal';
+import { connect } from 'react-redux';
+import { fetchProducts } from '../actions/productActions';
+//import { productsReducer } from '../reducers/productReducers'
 
 Modal.setAppElement('#root')
 
-function Products({ products, cartItems, setCartItems }) {
+function Products({ store, products, cartItems, setCartItems }) {
 
+    useEffect(() => {
+        store.dispatch(fetchProducts())
+    })
     const [product, setProduct] = useState(null);
 
     const addToCart = (product) => {
@@ -39,22 +44,28 @@ function Products({ products, cartItems, setCartItems }) {
     return (
         <div>
             <Slide direction="up" cascade triggerOnce duration='500'>
-                <ul className="products">
-                    {products.map(product => (
-                        <li key={product._id}>
-                            <div className="product">
-                                <a href={"#" + product._id} onClick={() => openModal(product)}>
-                                    <img src={product.image} alt={product.title} />
-                                    <p>{product.title}</p>
-                                </a>
-                                <div className="product-price">
-                                    <div>${product.price}</div>
-                                    <button onClick={() => addToCart(product)} className='button primary'>Add To Cart</button>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                {
+                    !products
+                        ? (<div>Loading...</div>)
+                        :
+                        (<ul className="products">
+                            {products.map(product => (
+                                <li key={product._id}>
+                                    <div className="product">
+                                        <a href={"#" + product._id} onClick={() => openModal(product)}>
+                                            <img src={product.image} alt={product.title} />
+                                            <p>{product.title}</p>
+                                        </a>
+                                        <div className="product-price">
+                                            <div>${product.price}</div>
+                                            <button onClick={() => addToCart(product)} className='button primary'>Add To Cart</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>)
+                }
+
             </Slide>
             {
                 product && (
@@ -97,4 +108,8 @@ function Products({ products, cartItems, setCartItems }) {
     )
 }
 
-export default Products
+// export default Products
+
+export default connect((state) => ({ products: state.products.items }), {
+    fetchProducts,
+})(Products);
