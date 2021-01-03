@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Slide, Zoom } from "react-awesome-reveal"
 import Modal from 'react-modal';
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
 import { fetchProducts } from '../actions/productActions';
 //import { productsReducer } from '../reducers/productReducers'
 
