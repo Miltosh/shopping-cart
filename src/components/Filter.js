@@ -1,66 +1,51 @@
 import React from 'react'
+import { filterProducts, sortProducts } from '../actions/productActions';
+import { connect } from 'react-redux';
 
-function Filter({ size, data, sort, setSort, products, setProducts, setSize }) {
-
-    const filterProducts = (event) => {
-        if (event.target.value === "") {
-            setSize(event.target.value)
-            setProducts(data.products)
-        } else {
-            setSize(event.target.value)
-            setProducts(data.products.filter(
-                (product) => product.availableSizes.indexOf(event.target.value) >= 0
-            ),
-            )
-        }
-    }
-
-    const sortProducts = (event) => {
-        const sort = event.target.value;
-
-        setSort(sort)
-        setProducts(products
-            .slice()
-            .sort((a, b) =>
-                sort === 'lowest'
-                    ? a.price > b.price
-                        ? 1
-                        : -1
-                    : sort === 'highest'
-                        ? a.price < b.price
-                            ? 1
-                            : -1
-                        : a._id < b._id
-                            ? 1
-                            : -1
-            ))
-    }
+function Filter({ size, products, filteredProducts, store }) {
 
     return (
-        <div className="filter">
-            <div className="filter-result">{products.length} Products</div>
-            <div className="filter-sort">
-                Order{" "}
-                <select defaultValue={size} onChange={(e) => sortProducts(e)}>
-                    <option value="">Latest</option>
-                    <option value="lowest">Lowest</option>
-                    <option value="highest">Highest</option>
-                </select>
-            </div>
-            <div className="filter-size">
-                Filter{" "}
-                <select defaultValue={size} onChange={(e) => filterProducts(e)}>
-                    <option value="">ALL</option>
-                    <option value="XS">XS</option>
-                    <option value="S">S</option>
-                    <option value="M">M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                    <option value="XXL">XXL</option>
-                </select>
-            </div>
-        </div>
+        !filterProducts ? (<div>Loading...</div>)
+            : (
+                <div className="filter">
+                    <div className="filter-result"> {!filteredProducts ? 'Products is Loading...' : `${filteredProducts.length} Products`} </div>
+                    <div className="filter-sort">
+                        Order{" "}
+                        <select defaultValue={size} onChange={(e) => store.dispatch(sortProducts(filteredProducts, e.target.value))}>
+                            <option value="latest">Latest</option>
+                            <option value="lowest">Lowest</option>
+                            <option value="highest">Highest</option>
+                        </select>
+                    </div>
+                    <div className="filter-size">
+                        Filter{" "}
+                        {/* <select defaultValue={size} onChange={(e) => filterProducts(e)}> */}
+                        <select defaultValue={size} onChange={(e) => store.dispatch(filterProducts(products, e.target.value))}>
+                            <option value="">ALL</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                </div>
+            )
     )
 }
 
-export default Filter
+//export default Filter
+
+export default connect(
+    (state) => ({
+        size: state.products.size,
+        sort: state.products.sort,
+        products: state.products.items,
+        filteredProducts: state.products.filteredItems,
+    }),
+    {
+        filterProducts,
+        sortProducts,
+    }
+)(Filter);
