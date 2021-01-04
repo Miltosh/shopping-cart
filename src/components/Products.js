@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Slide, Zoom } from "react-awesome-reveal"
 import Modal from 'react-modal';
-//import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { fetchProducts } from '../actions/productActions';
 //import { productsReducer } from '../reducers/productReducers'
 
@@ -11,7 +11,8 @@ function Products({ store, products, cartItems, setCartItems }) {
 
     useEffect(() => {
         store.dispatch(fetchProducts())
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const [product, setProduct] = useState(null);
 
     const addToCart = (product) => {
@@ -36,10 +37,6 @@ function Products({ store, products, cartItems, setCartItems }) {
     const openModal = (product) => {
         setProduct(product)
     }
-
-    // const closeModal = () => {
-    //     setProduct(null)
-    // }
 
     return (
         <div>
@@ -71,7 +68,6 @@ function Products({ store, products, cartItems, setCartItems }) {
                 product && (
                     <Modal
                         isOpen={true}
-                    //ariaHideApp={false}
                     >
                         <Zoom triggerOnce>
                             <button className="close-modal" onClick={() => setProduct(null)}>X</button>
@@ -108,8 +104,8 @@ function Products({ store, products, cartItems, setCartItems }) {
     )
 }
 
-export default Products
+//export default Products
 
-// export default connect((state) => ({ products: state.products.items }), {
-//     fetchProducts,
-// })(Products);
+export default connect((state) => ({ products: state.products.filteredItems }), {
+    fetchProducts,
+})(Products);
