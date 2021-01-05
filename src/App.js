@@ -1,4 +1,3 @@
-//feature 1
 import React, { useState } from "react";
 import Cart from "./components/Cart";
 import Filter from "./components/Filter";
@@ -8,14 +7,6 @@ import { Provider } from "react-redux";
 
 function App() {
 
-  const useLocalStorageList = (key, defaultValue) => {
-    const stored = localStorage.getItem(key);
-    const initial = stored ? JSON.parse(stored) : defaultValue;
-    const [value, setValue] = useState(initial);
-
-    return [value, setValue];
-  };
-  const [cartItems, setCartItems] = useLocalStorageList('CartItems', [])
   const [showCheckout, setShowCheckout] = useState(false);
 
   return (
@@ -31,15 +22,11 @@ function App() {
                 store={store}
               />
               <Products
-                cartItems={cartItems}
-                setCartItems={setCartItems}
                 store={store}
               />
             </div>
             <div className="sidebar">
               <Cart
-                cartItems={cartItems}
-                setCartItems={setCartItems}
                 showCheckout={showCheckout}
                 setShowCheckout={setShowCheckout}
               />

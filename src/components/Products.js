@@ -3,36 +3,17 @@ import { Slide, Zoom } from "react-awesome-reveal"
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { fetchProducts } from '../actions/productActions';
-//import { productsReducer } from '../reducers/productReducers'
+import { addToCart } from '../actions/cartActions';
 
 Modal.setAppElement('#root')
 
-function Products({ store, products, cartItems, setCartItems }) {
+function Products({ store, products, addToCart }) {
 
     useEffect(() => {
         store.dispatch(fetchProducts())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const [product, setProduct] = useState(null);
-
-    const addToCart = (product) => {
-        const itemsCart = cartItems.slice();
-        let alreadyInCart = false;
-
-        itemsCart.forEach(item => {
-            if (item._id === product._id) {
-
-                item.count++;
-                alreadyInCart = true;
-            }
-        });
-        if (!alreadyInCart) {
-            itemsCart.push({ ...product, count: 1 });
-            alreadyInCart = true;
-        }
-        setCartItems(itemsCart)
-        localStorage.setItem("CartItems", JSON.stringify(itemsCart))
-    }
 
     const openModal = (product) => {
         setProduct(product)
@@ -62,7 +43,6 @@ function Products({ store, products, cartItems, setCartItems }) {
                             ))}
                         </ul>)
                 }
-
             </Slide>
             {
                 product && (
@@ -104,8 +84,7 @@ function Products({ store, products, cartItems, setCartItems }) {
     )
 }
 
-//export default Products
-
 export default connect((state) => ({ products: state.products.filteredItems }), {
     fetchProducts,
+    addToCart,
 })(Products);

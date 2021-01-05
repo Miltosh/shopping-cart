@@ -2,7 +2,7 @@ import React from 'react'
 import { filterProducts, sortProducts } from '../actions/productActions';
 import { connect } from 'react-redux';
 
-function Filter({ size, products, filteredProducts, store }) {
+function Filter({ size, sort, products, filteredProducts, store }) {
 
     return (
         !filterProducts ? (<div>Loading...</div>)
@@ -11,7 +11,7 @@ function Filter({ size, products, filteredProducts, store }) {
                     <div className="filter-result"> {!filteredProducts ? 'Products is Loading...' : `${filteredProducts.length} Products`} </div>
                     <div className="filter-sort">
                         Order{" "}
-                        <select defaultValue={size} onChange={(e) => store.dispatch(sortProducts(filteredProducts, e.target.value))}>
+                        <select defaultValue={sort} onChange={(e) => store.dispatch(sortProducts(filteredProducts, e.target.value))}>
                             <option value="latest">Latest</option>
                             <option value="lowest">Lowest</option>
                             <option value="highest">Highest</option>
@@ -19,7 +19,6 @@ function Filter({ size, products, filteredProducts, store }) {
                     </div>
                     <div className="filter-size">
                         Filter{" "}
-                        {/* <select defaultValue={size} onChange={(e) => filterProducts(e)}> */}
                         <select defaultValue={size} onChange={(e) => store.dispatch(filterProducts(products, e.target.value))}>
                             <option value="">ALL</option>
                             <option value="XS">XS</option>
@@ -34,8 +33,6 @@ function Filter({ size, products, filteredProducts, store }) {
             )
     )
 }
-
-//export default Filter
 
 export default connect(
     (state) => ({
