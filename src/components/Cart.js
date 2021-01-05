@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-//import Fade from 'react-reveal/Fade';
 import { Slide } from "react-awesome-reveal"
+import { connect } from 'react-redux';
+import { removeFromCart } from '../actions/cartActions';
 
-function Cart({ cartItems, setCartItems, showCheckout, setShowCheckout }) {
+function Cart({ cartItems, removeFromCart, showCheckout, setShowCheckout }) {
 
-    const removeFromCart = (product) => {
-        const itemsCart = cartItems.slice();
-        setCartItems(itemsCart.filter(x => x._id !== product._id))
-        localStorage.setItem("CartItems", JSON.stringify(itemsCart.filter(x => x._id !== product._id)))
-    }
 
     const [formItems, setFormItems] = useState({
         Email: '',
@@ -24,7 +20,6 @@ function Cart({ cartItems, setCartItems, showCheckout, setShowCheckout }) {
 
     const handleInput = (e) => {
         setFormItems({ ...formItems, [e.target.name]: e.target.value })
-        console.log(formItems)
     }
 
     return (
@@ -103,4 +98,8 @@ function Cart({ cartItems, setCartItems, showCheckout, setShowCheckout }) {
     )
 }
 
-export default Cart
+export default connect((state) => ({
+    cartItems: state.cart.cartItems,
+}),
+    { removeFromCart }
+)(Cart);
