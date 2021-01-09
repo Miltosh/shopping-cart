@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Slide } from "react-awesome-reveal"
+import { Slide, Zoom } from "react-awesome-reveal"
+import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { removeFromCart } from '../actions/cartActions';
+import { createOrder, clearOrder } from '../actions/orderAction'
 
-function Cart({ cartItems, removeFromCart, showCheckout, setShowCheckout }) {
+function Cart({ order, cartItems, clearOrder, createOrder, removeFromCart, showCheckout, setShowCheckout }) {
 
 
     const [formItems, setFormItems] = useState({
@@ -12,14 +14,20 @@ function Cart({ cartItems, removeFromCart, showCheckout, setShowCheckout }) {
         Address: ''
     });
 
-    const createOrder = (e) => {
+    const makeOrder = (e) => {
         e.preventDefault();
-        const order = { ...formItems, ...cartItems }
-        alert("Need to save order form " + order.Name)
+        console.log(order)
+        order = { ...formItems, cartItems: [...cartItems], total: cartItems.reduce((a, c) => a + c.price * c.count, 0) }
+        createOrder(order)
+        console.log(order)
     }
 
     const handleInput = (e) => {
         setFormItems({ ...formItems, [e.target.name]: e.target.value })
+    }
+
+    const closeModal = () => {
+        clearOrder()
     }
 
     return (
@@ -28,6 +36,55 @@ function Cart({ cartItems, removeFromCart, showCheckout, setShowCheckout }) {
                 ? <div className="cart cart-header">Cart is empty</div>
                 : <div className="cart cart-header">You have {cartItems.length} in the cart {" "}</div>
             }
+
+            {
+                order &&
+                <Modal
+                    isOpen={true}
+                    onRequestClose={() => closeModal()}>
+                    <Zoom>
+                        <button className="close-modal" onClick={() => closeModal()}>x</button>
+                        <div className="order-details">
+                            <h3 className="success-message">
+                                Your order has been placed.
+                            </h3>
+                            <h2>Order number {order._id}</h2>
+                            <ul>
+                                <li>
+                                    <div>Name:</div>
+                                    {console.log(order)}
+                                    <div>{order.Name}</div>
+                                </li>
+                                <li>
+                                    <div>Email:</div>
+                                    <div>{order.Email}</div>
+                                </li>
+                                <li>
+                                    <div>Address:</div>
+                                    <div>{order.Address}</div>
+                                </li>
+                                <li>
+                                    <div>Date:</div>
+                                    <div>{order.createdAt}</div>
+                                </li>
+                                <li>
+                                    <div>Total:</div>
+                                    <div>{order.total}</div>
+                                </li>
+                                <li>
+                                    <div>Cart Items:</div>
+                                    <div>{order.cartItems.map(x => (
+                                        <div key={x._id}>
+                                            {x.count} {" x "} {x.title}
+                                        </div>
+                                    ))}</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </Zoom>
+                </Modal>
+            }
+
             <div>
                 <div className="cart">
                     <Slide cascade triggerOnce direction='left' duration='500'>
@@ -68,7 +125,7 @@ function Cart({ cartItems, removeFromCart, showCheckout, setShowCheckout }) {
                 {showCheckout && (
                     <Slide direction='right' cascade={false} triggerOnce duration='700'>
                         <div className="cart">
-                            <form onSubmit={(e) => createOrder(e)}>
+                            <form onSubmit={(e) => makeOrder(e)}>
                                 <ul className="form-container">
                                     <li>
                                         <label>Email</label>
@@ -99,7 +156,8 @@ function Cart({ cartItems, removeFromCart, showCheckout, setShowCheckout }) {
 }
 
 export default connect((state) => ({
+    order: state.order.order,
     cartItems: state.cart.cartItems,
 }),
-    { removeFromCart }
+    { removeFromCart, createOrder, clearOrder }
 )(Cart);
